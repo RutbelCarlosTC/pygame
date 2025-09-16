@@ -20,6 +20,7 @@ backgrounds = [
 ]
 current_background_index = 0
 
+
 # Background Sound
 mixer.music.load('background.mp3')
 mixer.music.play(-1)
@@ -77,6 +78,7 @@ speed_boost_active = False
 # Score and level system
 score_value = 0
 level = 1
+max_levels = len(backgrounds)
 enemies_defeated_this_level = 0
 enemies_per_level = 10
 
@@ -90,6 +92,7 @@ textY = 10
 # Game states
 game_over = False
 game_paused = False
+game_won = False
 
 def show_score(x, y):
     score = font.render(f"Puntaje: {score_value}", True, (0, 255, 0))
@@ -120,6 +123,10 @@ def game_over_text():
     screen.blit(over_text, (150, 250))
     restart_text = font.render("Presiona R para reiniciar", True, (255, 255, 255))
     screen.blit(restart_text, (250, 320))
+
+def victory_text():
+    win_text = over_font.render("VICTORIA", True, (255, 215, 0))  # dorado
+    screen.blit(win_text, (250, 250))
 
 def pause_text():
     pause_text = over_font.render("PAUSA", True, (255, 255, 0))
@@ -201,11 +208,16 @@ def reset_game():
         enemyY[i] = random.randint(50, 150)
 
 def next_level():
-    global level, enemies_defeated_this_level, enemy_speed_multiplier, current_background_index
+    global level, enemies_defeated_this_level, enemy_speed_multiplier, current_background_index, game_won 
     level += 1
     enemies_defeated_this_level = 0
     enemy_speed_multiplier += 0.5
     
+    # Si el jugador ya pasó el último nivel
+    if level > max_levels:
+        game_won = True
+        return
+
     # Cambiar fondo (cicla entre los disponibles)
     current_background_index = (current_background_index + 1) % len(backgrounds)
 
@@ -251,6 +263,12 @@ while running:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
+            
+    if game_won:
+        screen.blit(backgrounds[current_background_index], (0, 0))  # fondo final
+        victory_text()
+        pygame.display.update()
+        continue   # Detiene la lógica del juego, solo muestra victoria
 
     if not game_paused and not game_over:
         # Player movement
