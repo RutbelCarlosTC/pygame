@@ -10,8 +10,15 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 # Background
-background = pygame.image.load('background.jpg')
-background = pygame.transform.scale(background, (800, 600))
+# Backgrounds
+backgrounds = [
+    pygame.transform.scale(pygame.image.load('background1.jpg'), (800, 600)),
+    pygame.transform.scale(pygame.image.load('background2.jpg'), (800, 600)),
+    pygame.transform.scale(pygame.image.load('background3.jpg'), (800, 600)),
+    pygame.transform.scale(pygame.image.load('background4.jpg'), (800, 600)),
+    pygame.transform.scale(pygame.image.load('background5.jpg'), (800, 600))
+]
+current_background_index = 0
 
 # Background Sound
 mixer.music.load('background.mp3')
@@ -194,11 +201,14 @@ def reset_game():
         enemyY[i] = random.randint(50, 150)
 
 def next_level():
-    global level, enemies_defeated_this_level, enemy_speed_multiplier
+    global level, enemies_defeated_this_level, enemy_speed_multiplier, current_background_index
     level += 1
     enemies_defeated_this_level = 0
     enemy_speed_multiplier += 0.5
     
+    # Cambiar fondo (cicla entre los disponibles)
+    current_background_index = (current_background_index + 1) % len(backgrounds)
+
     # Reset enemy positions for new level
     for i in range(num_of_enemies):
         enemyX[i] = random.randint(0, 735)
@@ -212,7 +222,7 @@ clock = pygame.time.Clock()
 while running:
     clock.tick(60)  # 60 FPS
     screen.fill((0, 0, 0))
-    screen.blit(background, (0, 0))
+    screen.blit(backgrounds[current_background_index], (0, 0))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
