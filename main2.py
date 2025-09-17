@@ -280,7 +280,6 @@ while running:
 
 
         # Enemy movement
-        pursuers = random.sample(range(num_of_enemies), k=num_of_enemies // 3)  
         for i in range(num_of_enemies):
             if enemyY[i] > 440:
                 player_lives -= 1

@@ -10,7 +10,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 # Background
-background = pygame.image.load('background.jpg')
+background = pygame.image.load('background1.jpg')
 background = pygame.transform.scale(background, (800, 600))  # Para que cubra toda la pantalla
 
 
